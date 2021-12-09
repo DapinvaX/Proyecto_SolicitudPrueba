@@ -4,7 +4,7 @@
 
 <head>
 
- <title>profesors COVID</title>
+ <title>Listado de Profesores</title>
 
  <meta charset="utf-8">
 
