@@ -4,76 +4,81 @@
 
 <head>
 
- <title>Listado de Profesores</title>
+    <title>Listado de Profesores</title>
 
- <meta charset="utf-8">
+    <meta charset="utf-8">
 
- <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
- <script src="profesores.js"></script>
+    <script src="profesores.js"></script>
 
- <script>
-//Modificar codigo ajax (mostrar test positivos y negativos)
-function mostrarInfoProfesor(id) {
+    <script>
+    //Modificar codigo ajax (mostrar test positivos y negativos)
+    function mostrarInfoProfesor(id) {
 
 
-  if (id== "") {
+      if (id== "") {
 
-    document.getElementById("informacion").innerHTML = "";
+        document.getElementById("informacion").innerHTML = "";
 
-    return;
+        return;
 
-  } else {
+      } else {
 
-    var xmlhttp = new XMLHttpRequest();
+        var xmlhttp = new XMLHttpRequest();
 
-	   xmlhttp.onreadystatechange = function() {
+        xmlhttp.onreadystatechange = function() {
 
-      if (this.readyState == 4 && this.status == 200) {
-    	document.getElementById("informacion").innerHTML = this.responseText;
+          if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("informacion").innerHTML = this.responseText;
+
+          }
+
+        };
+
+        xmlhttp.open("GET","getProfesor.php?id="+id,true);
+
+        xmlhttp.send();
 
       }
 
-    };
+    }
 
-    xmlhttp.open("GET","getProfesor.php?id="+id,true);
+    </script>
 
-    xmlhttp.send();
+    <style>
 
-  }
+      #ifecha{
 
-}
+        margin-left: 0.35cm;
 
-</script>
+      }
 
-<style>
+      #btnGuardar{
 
-  #ifecha{
+        margin-top: 0.25cm;
 
-    margin-left: 0.35cm;
+      }
 
-  }
+      #divFecha{
 
-  #btnGuardar{
+        margin-top: 0.3cm;
 
-    margin-top: 0.25cm;
+      }
 
-  }
 
-  #divFecha{
+    </style>
+    <!-- jQuery library -->
+    <script src="js/jquery.min.js"></script>
 
-    margin-top: 0.3cm;
-
-  }
-
-</style>
-
+    <!-- jsPDF library -->
+    <script src="js/jsPDF/dist/jspdf.min.js"></script>
 </head>
 
 <body>
@@ -137,7 +142,7 @@ function mostrarInfoProfesor(id) {
 
 
 
-     $html='<div class="container">
+     $html='<div class="container id="container" name="tabla">
 
    <h2>Listado de Profesores</h2>          
 
@@ -154,6 +159,8 @@ function mostrarInfoProfesor(id) {
          <th>NOMBRE</th>
 
          <th>TELEFONO</th>
+
+         <th>ASIGNATURA</th>
 
          <th>FIRMA</th>
 
@@ -208,8 +215,19 @@ function mostrarInfoProfesor(id) {
 
              <td><input type="text" class="form-control" id="telefono" value="'.$profesor['telefono'].'" name="telefono" style="width:150px"></td>
 
-             <td><input type="text" class="form-control" id="asignatura" value="'.$profesor['asignatura'].'" name="asignatura" style="width:150px"></td>
-
+        <!-- <td><input type="text" class="form-control" id="asignatura" value="'.$profesor['asignatura'].'" name="asignatura" style="width:150px"></td> -->
+              
+             <td>
+             <div class="input-field col s12">
+                <select name="asignatura" id="asignatura">
+                  <option value="" disabled selected>Elija una asignatura</option>
+                  <option value="Ciencias">Ciencias</option>
+                  <option value="Letras">Letras</option>
+                  <option value="Tecnologia">Tecnologia</option>
+                </select>
+             </div>
+            </td> 
+        
              <td>'.$profesor['firma'].'</td>
 
              <td>'.'<input type="submit" class="btn btn-success"  value="Guardar" />'.'</td>
@@ -237,7 +255,7 @@ function mostrarInfoProfesor(id) {
                        </table>
 
                        <div id="informacion">
-                       
+
                        </div>
 
                      </div>';
@@ -252,15 +270,47 @@ function mostrarInfoProfesor(id) {
 
    ?>
 
+  <script type="text/javascript">
+    function crearPDF(){
+     
+      var doc = new jsPDF();
+      var elementHTML = $('#tabla').html();
+      var specialElementHandlers = {
+      '#elementH': function (element, renderer) {
+        return true;
 
+    }
+  
+};
+doc.fromHTML(elementHTML, 15, 15, {
+    'width': 170,
+    'elementHandlers': specialElementHandlers
+});
 
-<div class="container">
+// Save the PDF
+doc.save('tabla.pdf');
+alert("Crear PDF");
+    }
+  </script>
 
-
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            Convertir a PDF
+            
+            <input type="button" value="Convertir a PDF" class="waves-effect waves-light btn blue white-text" onclick="javascript:crearPDF();">
+          </div>
+          <div class="col-md-3">
+            
+          </div>
+          <div class="col-md-3">
+            
+          </div>
+          <div class="col-md-3">
+            
+          </div>
+        </div>
       </div>
-
-    </div>
-
 
 
   </body>
